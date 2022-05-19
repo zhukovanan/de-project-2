@@ -32,7 +32,7 @@ CREATE TABLE public.shipping_country_rates(
   ID                              serial,
   shipping_country                 text,
   shipping_country_base_rate       NUMERIC(14,3),
-  PRIMARY KEY (ID))
+  PRIMARY KEY (ID));
 
 --shipping_agreement
 CREATE TABLE public.shipping_agreement(
@@ -40,7 +40,7 @@ CREATE TABLE public.shipping_agreement(
   agreement_number                 text,
   agreement_rate       NUMERIC(14,3),
   agreement_commission NUMERIC(14,3),
-  PRIMARY KEY (agreementid))
+  PRIMARY KEY (agreementid));
 
 --shipping_transfer
 CREATE TABLE public.shipping_transfer(
@@ -48,7 +48,7 @@ CREATE TABLE public.shipping_transfer(
   transfer_type                 text,
   transfer_model       			text,
   shipping_transfer_rate NUMERIC(14,3),
-  PRIMARY KEY (id))
+  PRIMARY KEY (id));
   
 --shipping_info
 CREATE TABLE public.shipping_info(
@@ -62,7 +62,7 @@ CREATE TABLE public.shipping_info(
   PRIMARY KEY (shippingid),
   FOREIGN KEY (transfer_type_id) REFERENCES public.shipping_transfer(id),
   FOREIGN KEY (shipping_country_id) REFERENCES public.shipping_country_rates(id),
-  FOREIGN KEY (agreementid) REFERENCES public.shipping_agreement(agreementid))
+  FOREIGN KEY (agreementid) REFERENCES public.shipping_agreement(agreementid));
  
   
 --shipping_status
@@ -72,7 +72,7 @@ CREATE TABLE public.shipping_status(
   state                  text,
   shipping_start_fact_datetime TIMESTAMP,
   shipping_end_fact_datetime  TIMESTAMP,
-  PRIMARY KEY (shippingid))
+  PRIMARY KEY (shippingid));
 
   
 --insert data into shipping_country_rates
@@ -80,7 +80,7 @@ insert into public.shipping_country_rates (shipping_country,shipping_country_bas
 select distinct
 	shipping_country,
 	shipping_country_base_rate
-from public.shipping
+from public.shipping;
 
 
 --insert data into shipping_agreement
@@ -90,7 +90,7 @@ select distinct
 	(regexp_split_to_array(vendor_agreement_description, E'\\:+'))[2]::text,
 	(regexp_split_to_array(vendor_agreement_description, E'\\:+'))[3]::numeric,
 	(regexp_split_to_array(vendor_agreement_description, E'\\:+'))[4]::numeric
-from public.shipping
+from public.shipping;
 
 
 --insert data into shipping_transfer
@@ -99,7 +99,7 @@ select distinct
 	(regexp_split_to_array(shipping_transfer_description, E'\\:+'))[1]::text,
 	(regexp_split_to_array(shipping_transfer_description, E'\\:+'))[2]::text,
 	shipping_transfer_rate
-from public.shipping
+from public.shipping;
 
 
 --insert data into shipping_info
@@ -117,7 +117,7 @@ inner join public.shipping_transfer st
 on (regexp_split_to_array(shipping_transfer_description, E'\\:+'))[1]::text = st.transfer_type 
 and (regexp_split_to_array(shipping_transfer_description, E'\\:+'))[2]::text = st.transfer_model
 inner join public.shipping_country_rates scr
-on s.shipping_country  = scr.shipping_country
+on s.shipping_country  = scr.shipping_country;
 
 
 --insert data into shipping_status
@@ -142,7 +142,7 @@ select distinct
 from public.shipping s
 inner join status_mart as sm
 on  s.shippingid = sm.shippingid
-and sm.max_dat = s.state_datetime 
+and sm.max_dat = s.state_datetime; 
 
 --view shipping_datamart
 create view shipping_datamart as (
